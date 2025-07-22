@@ -1,47 +1,30 @@
-import { API_KEY, API_SECRET } from "@/lib/config";
-import { getAuthUrl } from "@/lib/utils/user.actions";
-import { NextRequest, NextResponse } from "next/server";
-import { TwitterApi } from "twitter-api-v2";
+import { completeAuth, getOauthLink } from "@/lib/utils/twitter-client";
+import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const { oauth_token_secret } = (await getAuthUrl()) || {};
   // get the query
   const searchParams = req.nextUrl.searchParams;
-  const oauth_token = searchParams.get("oauth_token");
-  const oauth_verifier = searchParams.get("oauth_verifier");
+  const state = searchParams.get("state");
+  const code = searchParams.get("code");
 
-  //
-  console.log("oauth_token_secret", oauth_token_secret);
+  // get the codeverifier and state:sessionstate
+  const { codeVerifier, state: sessionState } = await getOauthLink();
+
+  if (!codeVerifier || !sessionState || !code || !state) {
+    return new Response("Failed to authenticate refused by user", {
+      status: 500,
+    });
+  }
 
   try {
-    const client = new TwitterApi({
-      appKey: API_KEY,
-      appSecret: API_SECRET,
-      accessToken: oauth_token,
-      accessSecret: oauth_token_secret,
-    });
+    // complete the authentication
+    const response = await completeAuth({ code, codeVerifier });
 
-    const {
-      client: loggedClient,
-      accessToken,
-      accessSecret,
-    } = await client.login(oauth_verifier!);
-    // Store accessToken & accessSecret securely for future requests
-
-    //
-
-    return NextResponse.json({
-      message: "Successfully authenticated!",
-      access_Token: accessToken,
-      access_Secret: accessSecret,
-    });
+    if() {
+        
+    }
   } catch (error) {
-    return NextResponse.json(
-      {
-        message: "Authentication failed",
-        error: "Invalid OAuth verifier or token",
-      },
-      { status: 400 }
-    );
+    console.error("Error during authentication callback:", error);
+    return new Response("Authentication failed", { status: 500 });
   }
 }

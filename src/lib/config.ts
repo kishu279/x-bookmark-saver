@@ -10,6 +10,18 @@ export const config = {
   // NextAuth Configuration
   NEXTAUTH_URL: process.env.NEXTAUTH_URL || "http://localhost:3000",
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || "",
+
+  // Twitter/X Callback URL
+  CALLBACK_URL:
+    process.env.CALLBACK_URL || "http://localhost:3000/api/auth/callback",
+
+  // Additional configuration can be added here
+  NODE_ENV: process.env.NODE_ENV || "development",
+
+  // Database URL for Prisma
+  DATABASE_URL:
+    process.env.DATABASE_URL ||
+    "postgresql://user:password@localhost:5432/mydb",
 } as const;
 
 // Individual exports for easier access
@@ -20,4 +32,7 @@ export const {
   API_SECRET,
   NEXTAUTH_URL,
   NEXTAUTH_SECRET,
+  CALLBACK_URL,
+  NODE_ENV,
+  DATABASE_URL,
 } = config;
