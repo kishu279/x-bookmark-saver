@@ -2,7 +2,7 @@ import { TwitterApi } from "twitter-api-v2";
 import { CALLBACK_URL, CLIENT_ID, CLIENT_SECRET } from "../config";
 import { prismaClient } from "../db/prismaClient";
 
-const prisma = prismaClient;
+const prisma = prismaClient; // Initialize Prisma client
 
 export function getTwitterClient() {
   return new TwitterApi({
@@ -33,6 +33,12 @@ export function getOauthLink() {
   return { url, codeVerifier, state };
 }
 
+// temporary storage -> user to credentials
+const userSession = new Map<
+  string,
+  { accessToken: string; refreshToken: string; expiresIn: number }
+>();
+
 // callback functionality
 export async function completeAuth({
   code,
@@ -59,6 +65,33 @@ export async function completeAuth({
     // get the user details
     const { data: userObject } = await loggedClient.v2.me();
     console.log("### User Authenticated ###", userObject);
+
+    // temporary storage
+
+    // get all the bookmarks
+    console.log("### Fetching Bookmarks ###");
+    const bookmarks = await loggedClient.v2.bookmarks({
+      expansions: ["referenced_tweets.id"],
+      "tweet.fields": ["referenced_tweets", "text"],
+    });
+
+    for await (const bookmark of bookmarks) {
+      // Find referenced quote tweet ID if present
+      const quotedTweetId = bookmark.referenced_tweets?.find(
+        (rt) => rt.type === "quoted"
+      )?.id;
+      let quotedTweet = null;
+
+      if (quotedTweetId && bookmarks.includes?.tweets) {
+        quotedTweet = bookmarks.includes.tweets.find(
+          (t) => t.id === quotedTweetId
+        );
+      }
+
+      console.log(
+        `Bookmark: ${bookmark.id} - Quoted Tweet: ${quotedTweet?.id} - Text: ${bookmark.text} - Quoted Text: ${quotedTweet?.text}`
+      );
+    }
 
     // store it somewhere
     // inside the prisma
