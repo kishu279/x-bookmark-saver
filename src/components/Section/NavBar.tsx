@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import LogoBoookiess from "./Logo";
 import { Button } from "../ui/button";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const navBarLinks = [
   // { name: "resources", href: "#", className: "", variant: "secondary" },
@@ -19,8 +20,11 @@ const navBarLinks = [
 ];
 
 export default function NavBar() {
+  const router = useRouter();
   const { data: session, status } = useSession();
-  
+
+  // console.log(session);
+
   return (
     <nav className="relative z-10 w-full">
       <div className="fixed top-0 left-0 w-full h-[80px] flex">
@@ -62,6 +66,7 @@ export default function NavBar() {
               <Button
                 onClick={() => {
                   // dashboard
+                  router.push("/dashboard");
                 }}
                 variant={"outline"}
               >

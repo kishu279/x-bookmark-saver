@@ -6,7 +6,12 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, NEXTAUTH_SECRET } from "./config";
+import {
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  NEXTAUTH_SECRET,
+} from "./config";
+import { createUser, UserType } from "./db/SaveUsers";
 
 const authOptions = {
   secret: NEXTAUTH_SECRET,
@@ -19,12 +24,23 @@ const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account, profile, session }) {
-      token.accessToken = account?.access_token;
-
+      console.log({ token, user, account, profile, session });
+      
       return token;
     },
     async session({ session, token, user }) {
-      session.accessToken = token.accessToken;
+      console.log({ token, user, session });
+
+      // const data: UserType = {
+      //   name: user.name!,
+      //   email: user.email,
+      //   accessToken: token.accessToken as string,
+      //   refreshToken: token.refreshToken as string,
+      //   expiresIn: token.expiresIn as number,
+      // };
+
+      // // save the user in the prisma client
+      // const createdUser = await createUser(data);
 
       return session;
     },
