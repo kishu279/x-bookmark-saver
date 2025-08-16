@@ -8,7 +8,7 @@ const navBarLinks = [
   // { name: "resources", href: "#", className: "", variant: "secondary" },
   // { name: "Pricing", href: "#", className: "", variant: "ghost" },
   {
-    name: "turoial",
+    name: "tutorial",
     className: "",
     variant: "ghost",
     onclick: () => {
@@ -58,7 +58,15 @@ export default function NavBar() {
               <Button
                 key={`${index}-${item.name}`}
                 className="capitalize"
-                variant={`${item.variant}`}
+                variant={item.variant as
+                  | "ghost"
+                  | "link"
+                  | "default"
+                  | "destructive"
+                  | "outline"
+                  | "secondary"
+                  | null
+                  | undefined}
                 onClick={item.onclick}
               >
                 {item.name}
