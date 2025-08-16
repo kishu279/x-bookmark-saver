@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/provider/theme-provider";
 import ToggleButton from "@/components/toggle-button";
+import SessionProvider from "@/components/provider/SessionProvider";
+import { auth } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,19 +21,20 @@ export const metadata: Metadata = {
   description: "Bring Your Bookmarks to Your Knowledge Corner",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   // get the session from the getServersession
-  const session = null;
+  const session = await auth();
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -41,6 +44,7 @@ export default function RootLayout({
             <div className="bg-neutral-950 h-screen">{children}</div>
             <ToggleButton />
           </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

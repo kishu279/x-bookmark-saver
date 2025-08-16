@@ -22,6 +22,9 @@ export const config = {
   DATABASE_URL:
     process.env.DATABASE_URL ||
     "postgresql://user:password@localhost:5432/mydb",
+
+  GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || "",
+  GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || "",
 } as const;
 
 // Individual exports for easier access
@@ -35,4 +38,6 @@ export const {
   CALLBACK_URL,
   NODE_ENV,
   DATABASE_URL,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
 } = config;

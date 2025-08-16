@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import LogoBoookiess from "./Logo";
 import { Button } from "../ui/button";
+import { signIn, useSession } from "next-auth/react";
 
 const navBarLinks = [
   // { name: "resources", href: "#", className: "", variant: "secondary" },
@@ -15,32 +16,11 @@ const navBarLinks = [
       // redirect to the tutorial
     },
   },
-  // {
-  //   name: "Login",
-  //   onclick: () => {
-  //     signIn("github", { callbackUrl: "/", redirect: false });
-  //   },
-  //   className: "",
-  //   variant: "ghost",
-  // },
-  // {
-  //   name: "Dashboard",
-  //   className: "",
-  //   variant: "outline",
-  //   onclick: () => {
-  //     // redirect to the dashboard
-  //   },
-  // },
 ];
 
 export default function NavBar() {
+  const { data: session, status } = useSession();
   
-  const status = "authenticated"
-  // check for the authentication according to it show the content or not
-
-  // const { data: session, status } = useSession();
-  // console.log(session);
-
   return (
     <nav className="relative z-10 w-full">
       <div className="fixed top-0 left-0 w-full h-[80px] flex">
@@ -58,15 +38,17 @@ export default function NavBar() {
               <Button
                 key={`${index}-${item.name}`}
                 className="capitalize"
-                variant={item.variant as
-                  | "ghost"
-                  | "link"
-                  | "default"
-                  | "destructive"
-                  | "outline"
-                  | "secondary"
-                  | null
-                  | undefined}
+                variant={
+                  item.variant as
+                    | "ghost"
+                    | "link"
+                    | "default"
+                    | "destructive"
+                    | "outline"
+                    | "secondary"
+                    | null
+                    | undefined
+                }
                 onClick={item.onclick}
               >
                 {item.name}
@@ -76,21 +58,22 @@ export default function NavBar() {
 
           <div className="flex gap-1 items-center">
             {/* Dashboard */}
-            {status === "authenticated" ? (
+            {status === "authenticated" && (
               <Button
                 onClick={() => {
                   // dashboard
-
                 }}
                 variant={"outline"}
               >
                 Dashboard
               </Button>
-            ) : (
+            )}
+
+            {status === "unauthenticated" && (
               <Button
                 variant={"ghost"}
                 onClick={() => {
-                  // signIn("github", {});
+                  signIn("github", { callbackUrl: "/" });
                 }}
               >
                 Login
