@@ -3,8 +3,8 @@
 import { prismaClient } from "./prismaClient";
 
 export interface UserType {
-  email?: string;
   name?: string;
+  email?: string;
   accessToken?: string;
   refreshToken?: string;
   expiresIn?: number;
@@ -13,6 +13,9 @@ export interface UserType {
 export async function createUser(user: UserType) {
   try {
     // check for the user exist or not
+    // if not then save the user on the database
+    // extraaa
+    // alongside also changes the accesstoken and secret if there is changes
     const foundUser = await prismaClient.user.findFirst({
       where: {
         email: user.email,
@@ -20,26 +23,29 @@ export async function createUser(user: UserType) {
     });
 
     if (!foundUser) {
-      // create
-      if (
-        !user.email ||
-        !user.name ||
-        !user.accessToken ||
-        !user.refreshToken ||
-        user.expiresIn === undefined
-      ) {
-        throw new Error("Missing required user properties for creation.");
-      }
+      // fields are present or not
+      // if (
+      //   !user.email ||
+      //   !user.name ||
+      //   !user.accessToken ||
+      //   !user.refreshToken ||
+      //   user.expiresIn === undefined
+      // ) {
+      //   throw new Error("Missing required user properties for creation.");
+      // }
 
+      // create
       const userCreated = await prismaClient.user.create({
         data: {
-          email: user.email,
-          name: user.name,
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
-          expiresIn: user.expiresIn,
+          email: user.email!,
+          name: user.name!,
+          // accessToken: user.accessToken,
+          // refreshToken: user.refreshToken,
+          // expiresIn: user.expiresIn,
         },
       });
+
+      console.log("User created:", { userCreated });
 
       return userCreated;
     }

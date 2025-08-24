@@ -1,5 +1,5 @@
-import { completeAuth, getOauthLink } from "@/lib/utils/twitter-client";
-import { NextRequest } from "next/server";
+import { completeAuth } from "@/lib/utils/twitter-client";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   // get the query
@@ -33,12 +33,17 @@ export async function GET(req: NextRequest) {
       return Response.json({ error }, { status: 500 });
     }
 
-    return Response.json(
-      { user: user?.name || user?.username },
-      {
-        status: 200, // 200 - OK
-      }
-    );
+    const response = NextResponse.redirect("/dashboard");
+    // response.json({ user: user?.name || user?.username }, { status: 200 });
+
+    // return Response.json(
+    //   { user: user?.name || user?.username },
+    //   {
+    //     status: 200, // 200 - OK
+    //   }
+    // );
+
+    return response
   } catch (error) {
     console.error("Error during authentication callback:", error);
     return new Response("Authentication failed", { status: 500 });

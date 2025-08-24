@@ -23,25 +23,24 @@ const authOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile, credentials, email }) {
+      console.log("#####Debug#####", { user, account, profile });
+
+      // call the function Create User
+      //
+      const createdOrFoundUser = await createUser({
+        email: user.email || profile?.email,
+        name: user.name || profile?.name || profile?.login,
+      });
+
+      return true;
+    },
     async jwt({ token, user, account, profile, session }) {
       console.log({ token, user, account, profile, session });
-      
       return token;
     },
     async session({ session, token, user }) {
       console.log({ token, user, session });
-
-      // const data: UserType = {
-      //   name: user.name!,
-      //   email: user.email,
-      //   accessToken: token.accessToken as string,
-      //   refreshToken: token.refreshToken as string,
-      //   expiresIn: token.expiresIn as number,
-      // };
-
-      // // save the user in the prisma client
-      // const createdUser = await createUser(data);
-
       return session;
     },
   },

@@ -25,6 +25,8 @@ export const config = {
 
   GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || "",
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || "",
+
+  NOTION_API_TOKEN: process.env.NOTION_API_TOKEN || "",
 } as const;
 
 // Individual exports for easier access
@@ -40,4 +42,5 @@ export const {
   DATABASE_URL,
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
+  NOTION_API_TOKEN,
 } = config;

@@ -76,6 +76,7 @@ export async function completeAuth({
     });
 
     for await (const bookmark of bookmarks) {
+      console.log("###DEBUG####");
       // Find referenced quote tweet ID if present
       const quotedTweetId = bookmark.referenced_tweets?.find(
         (rt) => rt.type === "quoted"
@@ -87,16 +88,19 @@ export async function completeAuth({
           (t) => t.id === quotedTweetId
         );
       }
+      console.log("###UN CONSTRUCTED DATA####", { bookmark });
 
+      console.log("###CONSTRUCTED DATA####");
       console.log(
         `Bookmark: ${bookmark.id} - Quoted Tweet: ${quotedTweet?.id} - Text: ${bookmark.text} - Quoted Text: ${quotedTweet?.text}`
       );
+      // construct the response
+      //
     }
 
     // store it somewhere
-    // inside the prisma
+    // inside the db
 
-    // get the user's profile data in the response
     return {
       success: true,
       user: { name: userObject.name, username: userObject.username },
