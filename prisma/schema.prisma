@@ -20,9 +20,9 @@ model User {
   email String @unique
   
   // personal access tokens
-  accessToken String?
-  refreshToken String?
-  expiresIn Int?
+  // accessToken String?
+  // refreshToken String?
+  // expiresIn Int?
 
   // future ... 
 }

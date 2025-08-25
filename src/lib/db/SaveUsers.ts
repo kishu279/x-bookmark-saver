@@ -10,6 +10,7 @@ export interface UserType {
   expiresIn?: number;
 }
 
+// create user and update user while signing in
 export async function createUser(user: UserType) {
   try {
     // check for the user exist or not
@@ -57,29 +58,7 @@ export async function createUser(user: UserType) {
 }
 
 export async function updateUserCredentials(user: UserType) {
-  // check for the user
   try {
-    const foundUser = await prismaClient.user.findFirst({
-      where: {
-        email: user.email,
-      },
-    });
-
-    if (foundUser) {
-      const userUpdated = await prismaClient.user.update({
-        where: {
-          email: user.email,
-        },
-        data: {
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
-          expiresIn: user.expiresIn,
-        },
-      });
-
-      return userUpdated;
-    }
-
     return null;
   } catch (err) {
     console.error("Error updating user:", err);
@@ -88,26 +67,6 @@ export async function updateUserCredentials(user: UserType) {
 
 export async function updateUserAccessToken(user: UserType) {
   try {
-    const foundUser = await prismaClient.user.findFirst({
-      where: {
-        email: user.email,
-      },
-    });
-
-    if (foundUser) {
-      const userUpdated = await prismaClient.user.update({
-        where: {
-          email: user.email,
-        },
-        data: {
-          accessToken: user.accessToken,
-        },
-      });
-
-      return userUpdated;
-    }
-
-    return null;
   } catch (err) {
     console.error("Error updating user:", err);
   }
