@@ -76,7 +76,7 @@ export default function NavBar() {
 
             {status === "unauthenticated" && (
               <Button
-                variant={"ghost"}
+                variant={"outline"}
                 onClick={() => {
                   signIn("github", { callbackUrl: "/" });
                 }}
